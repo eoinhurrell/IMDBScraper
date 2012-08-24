@@ -19,9 +19,12 @@ def getFilmPage(item):
 		if soup.find("h1", {"itemprop":"name"}) != None:
 			return soup
 		result = soup.find("a", {"href":re.compile('^/title/')})
-		page = urllib2.urlopen("http://www.imdb.com"+str(result['href']))
-		soup = Soup(page)
-		return soup
+		try:
+			page = urllib2.urlopen("http://www.imdb.com"+str(result['href']))
+			soup = Soup(page)
+			return soup
+		except Exception, e:
+			return None
 	except urllib2.HTTPError:
 		print "IMDB scrape error"
 
@@ -76,7 +79,10 @@ def getFullTitle(imdbpage):  #The Expendables 2 (2012) 7.7
 
 def makeLinkTo(item, path):
 	if not os.path.lexists(path):
-		os.symlink(item, path)
+		try:
+			os.symlink(item, path)
+		except Exception, e:
+			print "SYMLINK ERROR - "+ item + "=" + path
 
 def makeGenreFolderFrom(path, genrepath='./FilmsByGenre'):
 	#mkdir genrepath+Genres
@@ -86,15 +92,18 @@ def makeGenreFolderFrom(path, genrepath='./FilmsByGenre'):
 		itempath = os.path.join(path, item)
 		if os.path.isdir(itempath):   #The item is a film folder, get details
 			page = getFilmPage(item)
+			if page == None:
+				print str(item) + " not found on IMDB."
+				continue
 			genres = getGenres(page)
 			fulltitle = getFullTitle(page)
 			for genre in genres:
 				if not os.path.exists(os.path.join(genrepath, genre)):
 					os.makedirs(os.path.join(genrepath, genre))
-				makeLinkTo(itempath,os.path.join(genrepath, genre)+"/"+fulltitle)
+				makeLinkTo(itempath,os.path.join(os.path.join(genrepath, genre),fulltitle))
 
 if __name__ == '__main__':
-	makeGenreFolderFrom('/Volumes/Film/')
+	makeGenreFolderFrom('/Volumes/Series/')
 	# film = getFilmPage("The Expendables 2")
 	# genres = getGenres(film)
 	# title = getFullTitle(film)
