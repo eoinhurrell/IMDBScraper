@@ -5,7 +5,7 @@ from BeautifulSoup import BeautifulSoup as Soup
 
 def getFilmPage(item):
 	#http://www.imdb.com/find?q=lol&s=all
-	#<p><b>Popular Titles</b> (Displaying 1 Result)<table><tr> <td valign="top"><a href="/title/tt1592873/" onClick="(new Image()).src='/rg/find-tiny-photo-1/title_popular/images/b.gif?link=/title/tt1592873/';"><img src="http://ia.media-imdb.com/images/M/MV5BMTA0MjI5ODA3MjReQTJeQWpwZ15BbWU3MDI1NTE3Njc@._V1._SY30_SX23_.jpg" width="23" height="32" border="0"></a>&nbsp;</td><td align="right" valign="top"><img src="/images/b.gif" width="1" height="6"><br>1.</td><td valign="top"><img src="/images/b.gif" width="1" height="6"><br><a href="/title/tt1592873/" onclick="(new Image()).src='/rg/find-title-1/title_popular/images/b.gif?link=/title/tt1592873/';">LOL</a> (2012)                         <p class="find-aka">aka  "LOL USA" - France <em>(imdb display title)</em></p>   
+	#<p><b>Popular Titles</b> (Displaying 1 Result)<table><tr> <td valign="top"><a href="/title/tt1592873/" onClick="(new Image()).src='/rg/find-tiny-photo-1/title_popular/images/b.gif?link=/title/tt1592873/';"><img src="http://ia.media-imdb.com/images/M/MV5BMTA0MjI5ODA3MjReQTJeQWpwZ15BbWU3MDI1NTE3Njc@._V1._SY30_SX23_.jpg" width="23" height="32" border="0"></a>&nbsp;</td><td align="right" valign="top"><img src="/images/b.gif" width="1" height="6"><br>1.</td><td valign="top"><img src="/images/b.gif" width="1" height="6"><br><a href="/title/tt1592873/" onclick="(new Image()).src='/rg/find-title-1/title_popular/images/b.gif?link=/title/tt1592873/';">LOL</a> (2012)                         <p class="find-aka">aka  "LOL USA" - France <em>(imdb display title)</em></p>
 	#http://www.imdb.com/title/tt1592873/
 	try:
 		film = item.replace(' III',' 3')
@@ -41,12 +41,12 @@ def getGenres(imdbpage):
 def getFullTitle(imdbpage):  #The Expendables 2 (2012) 7.7
 	#<h1 class="header" itemprop="name">
 	# The Expendables 2
-	# 
-	# 
+	#
+	#
 	# <span class="nobr">(<a href="/year/2012/">2012</a>)</span>
-	# 
-	# 
-	# 
+	#
+	#
+	#
 	# </h1>
 	#<span itemprop="ratingValue">7.7</span>
 	info = imdbpage.find("h1", {"itemprop":"name"})
@@ -103,7 +103,5 @@ def makeGenreFolderFrom(path, genrepath='./FilmsByGenre'):
 				makeLinkTo(itempath,os.path.join(os.path.join(genrepath, genre),fulltitle))
 
 if __name__ == '__main__':
-	makeGenreFolderFrom('/Volumes/Series/')
-	# film = getFilmPage("The Expendables 2")
-	# genres = getGenres(film)
-	# title = getFullTitle(film)
+	if (sys.argv) > 1:
+		makeGenreFolderFrom(sys.argv[1])
